@@ -19,21 +19,21 @@ def index():
     # the result is a Python dictionary:
     text = y["text"]
 
-    text = text.replace(".", " ")
-    text = text.replace(",", " ")
+    simplerText = text.replace(".", " ")
+    simplerText = simplerText.replace(",", " ")
 
     charFreqs = { }
 
     spacesNum = 0
 
-    wordCount = text.split();
+    wordCount = simplerText.split();
     wordsNum = len(wordCount)
 
     for ch in text:
         if ch == ' ':
             spacesNum = spacesNum + 1
             continue
-        if ch >= '0' and ch <= '9':
+        if (ch >= '0' and ch <= '9') or ch == ',' or ch == '.':
             continue
 
         if ch in charFreqs.keys():
