@@ -18,7 +18,7 @@ def index():
 
     # the result is a Python dictionary:
     text = y["text"]
-    text = lower(text)
+    text = text.lower()
 
     simplerText = text.replace(".", " ")
     simplerText = simplerText.replace(",", " ")
