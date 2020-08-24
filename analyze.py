@@ -13,7 +13,7 @@ def index():
         x =  '{"text":""}'
     elif request.method == 'POST':
         #x = request.content
-        return request.__dict__.items()
+        return request
 
     # parse x:
     y = json.loads(x)
