@@ -4,7 +4,7 @@ import flask
 
 app = flask.Flask(__name__)
 @app.route("/analyze")
-def index(self, request):
+def index():
 
     # some JSON:
     x =  '{"text":"hello 2 times  "}'
