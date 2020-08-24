@@ -19,6 +19,9 @@ def index():
     # the result is a Python dictionary:
     text = y["text"]
 
+    text = text.replace(".", " ")
+    text = text.replace(",", " ")
+
     charFreqs = { }
 
     spacesNum = 0
