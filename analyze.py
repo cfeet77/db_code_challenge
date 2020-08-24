@@ -1,6 +1,7 @@
 import json
 import collections
 import flask
+from flask import request
 
 app = flask.Flask(__name__)
 @app.route("/analyze", methods=['GET', 'POST'])
