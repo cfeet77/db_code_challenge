@@ -3,17 +3,20 @@ import collections
 import flask
 
 app = flask.Flask(__name__)
-@app.route("/analyze")
+@app.route("/analyze", methods=['GET', 'POST'])
+
 def index():
 
     # some JSON:
-    x =  '{"text":"hello 2 times  "}'
+    if request.method == 'GET':
+        x =  '{"text":""}'
+    elif request.method == 'POST':
+        x = request.text
 
     # parse x:
     y = json.loads(x)
 
     # the result is a Python dictionary:
-    # print(y["text"])
     text = y["text"]
 
     charFreqs = { }
