@@ -12,7 +12,7 @@ def index():
     if request.method == 'GET':
         x =  '{"text":""}'
     elif request.method == 'POST':
-        x = request.text
+        x = request.content
 
     # parse x:
     y = json.loads(x)
