@@ -11,12 +11,10 @@ def index():
     # some JSON:
     if request.method == 'GET':
         x =  '{"text":""}'
+        # parse x:
+        y = json.loads(x)
     elif request.method == 'POST':
-        #x = request.content
-        return request.values
-
-    # parse x:
-    y = json.loads(x)
+        y = request.get_json()
 
     # the result is a Python dictionary:
     text = y["text"]
