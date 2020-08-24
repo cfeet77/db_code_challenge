@@ -1,57 +1,49 @@
+import requests
 import json
-import collections
-import flask
-from flask import request
 
-app = flask.Flask(__name__)
-@app.route("/analyze", methods=['GET', 'POST'])
+url = 'https://guarded-springs-51765.herokuapp.com/analyze'
 
-def index():
-
-    # some JSON:
-    if request.method == 'GET':
-        x =  '{"text":""}'
-        # parse x:
-        y = json.loads(x)
-    elif request.method == 'POST':
-        y = request.get_json()
-
-    # the result is a Python dictionary:
-    text = y["text"]
-
-    charFreqs = { }
-
-    spacesNum = 0
-
-    wordCount = text.split();
-    wordsNum = len(wordCount)
-
-    for ch in text:
-        if ch == ' ':
-            spacesNum = spacesNum + 1
-            continue
-        if ch >= '0' and ch <= '9':
-            continue
-
-        if ch in charFreqs.keys():
-            charFreqs[ch] = charFreqs[ch] + 1;
-        else:
-            charFreqs[ch] = 1
-
-    od = collections.OrderedDict(sorted(charFreqs.items()))
-
-    s = '{\n' + \
-    '            "textLength":{"withSpaces":' + str(len(text)) + ',"withoutSpaces":' + str(len(text) - spacesNum) + '},\n' + \
-    '            "wordCount":' + str(wordsNum) + ',\n' + \
-    '            "characterCount":['
-
+def testStep(verdict, myjson, lenWithSpaces, lenWithoutSpaces, wordCount, expectedCharFreq):
+    
+    x = requests.post(url, json = myjson)
+    
+    #print the response text:
+    
+    print(x.text)
+    
+    y = json.loads(x.text)
+    
+    if y['textLength']['withSpaces'] != lenWithSpaces:
+        print "test 1 failed"
+        verdict = "fail"
+    
+    if y['textLength']['withoutSpaces'] != lenWithoutSpaces:
+        print "test 2 failed"
+        verdict = "fail"
+    
+    if y['wordCount'] != wordCount:
+        print "test 3 failed"
+        verdict = "fail"
+    
     count = 0
-    for item in od.items():
-        if count != 0:
-            s = s + ','
-        s = s + '{"' + item[0] + '":' + str(item[1]) + '}'
-        count = count + 1 
+    for item in expectedCharFreq:
+        actualItem = y['characterCount'][count]
+        for subItem in item.items():
+            expChar = subItem[0]
+            expFreq = subItem[1]
+            if not expChar in actualItem:
+                print 'test 4a failed: expChar = ' + expChar + ', expFreq = ' + str(expFreq) + ', no matching key found'
+            elif actualItem[expChar] != expFreq:
+                print 'test 4b failed: expChar = ' + expChar + ', expFreq = ' + str(expFreq) + ', actualFreq = ' + str(actualItem[expChar])
+                verdict = "fail"
+        count = count + 1
+    
+verdict = "pass"
 
-    s = s + ']\n' + '}'
+testStep(verdict, {'text':'hello 2 times  '}, 15, 11, 3, [{"e":2},{"h":1},{"i":1},{"l":2},{"m":1},{"o":1},{"s":1},{"t":1}])
 
-    return s
+testStep(verdict, {'text':'more testing 4 coverage'}, 23, 20, 4, \
+    [{"a":1},{"c":1},{"e":4},{"g":2},{"i":1},{"m":1},{"n":1},{"o":2},{"r":2},{"s":1},{"t":2},{"v":1}])
+
+print "final verdict: " + verdict
+    
