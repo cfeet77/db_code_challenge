@@ -1,9 +1,6 @@
 import json
 import collections
 
-import flask
-app = flask.Flask(__name__)
-
 @app.route("/analyze")
 def index(request):
 
